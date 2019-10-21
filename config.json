@@ -1,0 +1,13 @@
+{
+	"postTemplate":"New video: \n(%title%)\n(%videoURL%)",
+	"youtube":{
+		"apiKey":[
+			""
+		],
+		"channelId":""
+	},
+	"telegram":{
+		"apiKey":"",
+		"channelId":""
+	}
+}
