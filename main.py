@@ -3,10 +3,33 @@ import requests
 import time
 import logging
 import telebot
+import os
 
-config = json.load(open("config.json", "r"))
+try:
+    config = json.load(open("config.json", "r"))
+except:
+    open("config.json", "w").write('''{
+    "postTemplate":"New video: (%title%),(%videoURL%)",
+    "logFilename":"all.log",
+    "youtube":{
+        "apiKey":[
+            ""
+        ],
+        "channelId":""
+    },
+    "telegram":{
+        "apiKey":"",
+        "channelId":""
+    }
+}''')
+    print('Отредактируйте config.json')
+    exit()
 
-logging.basicConfig(filename="all.log", level=logging.INFO)
+if os.path.isfile(config["logFilename"]):
+    logging.basicConfig(filename=config["logFilename"], level=logging.INFO)
+else:
+    open(config["logFilename"], "a").write("")
+    logging.basicConfig(filename=config["logFilename"], level=logging.INFO)
 
 youtubeApiKeys = config["youtube"]["apiKey"]
 youtubeChannelId = config["youtube"]["channelId"]
@@ -32,13 +55,14 @@ def postVideoToTelegram(video):
     logging.info(
         str(json.dumps({"telegramChannelId": telegramChannelId, "text": text})))
 
+
 print("Starting!")
 
 while True:
-    response = requests.get("https://www.googleapis.com/youtube/v3/search?key=" + youtubeApiKey +
-                            "&channelId=" + youtubeChannelId + "&part=snippet,id&order=date&maxResults=2")
-    print("https://www.googleapis.com/youtube/v3/search?key=" + youtubeApiKey +
-          "&channelId=" + youtubeChannelId + "&part=snippet,id&order=date&maxResults=2")
+    response = requests.get("https://www.googleapis.com/youtube/v3/search?key=" + youtubeApiKey
+                            + "&channelId=" + youtubeChannelId + "&part=snippet,id&order=date&maxResults=2")
+    print("https://www.googleapis.com/youtube/v3/search?key=" + youtubeApiKey
+          + "&channelId=" + youtubeChannelId + "&part=snippet,id&order=date&maxResults=2")
     ytData = json.loads(response.content)
     if response.status_code == 200:
         video = ytData["items"][0]
@@ -53,8 +77,8 @@ while True:
         logging.error(ytData["error"]["code"])
         logging.error(ytData["error"]["message"])
         for error in ytData["error"]["errors"]:
-            logging.error(error["domain"] + ', ' +
-                          error["reason"] + ', ' + error["message"])
+            logging.error(error["domain"] + ', '
+                          + error["reason"] + ', ' + error["message"])
             if error["reason"] == "qoutaExceeded":
                 qoutaExceededFlag = True
         if qoutaExceededFlag:

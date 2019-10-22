@@ -1,13 +1,14 @@
 {
-	"postTemplate":"New video: \n(%title%)\n(%videoURL%)",
-	"youtube":{
-		"apiKey":[
-			""
-		],
-		"channelId":""
-	},
-	"telegram":{
-		"apiKey":"",
-		"channelId":""
-	}
+    "postTemplate":"New video: (%title%),(%videoURL%)",
+    "logFilename":"all.log",
+    "youtube":{
+        "apiKey":[
+            ""
+        ],
+        "channelId":""
+    },
+    "telegram":{
+        "apiKey":"",
+        "channelId":""
+    }
 }
